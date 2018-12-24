@@ -1,0 +1,14 @@
+Retrospective
+
+We've again succesfully implementated the major features we wanted for this iteration of the app.
+
+However we've found that some of the issues that arose during our last sprint are still present.
+
+We still need to improve our communication but we have made strides and are communicating more.
+
+We are doing a better job of using trello and going forward will use it to be very clear about what's being done and by who.
+
+We're going to start working on things much sooner and delagating work more efficiently and effectively.
+
+idea board link:
+http://www.ideaboardz.com/for/ThreeStarBrainStorm/2750702

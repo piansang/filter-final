@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>{{ album.name }} <h1>
+	{% if album.images.count() > 0 %}
+		<div class="image-container">
+			{% for image in album.images.all() %}
+				<div>
+					<img src="{{ image.thumbnail }}"</b>
+				</div>
+			{% endfor %}
+				<div>
+					<a href="{{ url_for('filter') }}">
+						<label> 
+							<img src="{{ url_for('static', filename='plus_sign.jpg') }}"><br>
+							Add New Image
+						</label>
+					</a>
+				</div>
+				</div>
+		</div>
+	{% else %}
+		<p>No images in album.</p>
+	{% endif %}
+{% endblock %}

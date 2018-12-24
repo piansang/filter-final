@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+<html>
+	<head>
+	<title>Web Filter</title>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+		<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="/static/math.js?r={{reload}}"></script>
+		<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			var httpRequest;
+			document.getElementById("filter-submit").addEventListener('submit', sendImageToFilter);
+			document.getElementById("profile-submit").addEventListener('click', sendImageToProfile);
+			document.getElementById("album-submit").addEventListener('click', sendImageToAlbum);
+			document.getElementById("fileSelect").addEventListener('change', upload);
+			
+			function upload(input) {
+				if(input.target.files && input.target.files[0]) {
+					var file = input.target.files[0]
+					reader = new FileReader();
+					reader.onload = function() {
+						document.getElementById('displayImage').setAttribute('src', reader.result);
+						document.getElementById('urlhidden').setAttribute('value', reader.result);
+					}
+					reader.readAsDataURL(file);
+				}
+			}
+			
+			function sendImageToFilter() {
+				event.preventDefault();
+			
+				httpRequest = new XMLHttpRequest();
+				httpRequest.responseType = 'json';
+				const url = "{{ url_for('upload_filter') }}";
+				
+				data = JSON.stringify({
+					image: document.getElementById("urlhidden").getAttribute("value") || "fnord",
+					filter: document.getElementById("filter-select").selectedOptions[0].getAttribute("value") || "g"
+				});
+
+				if (!httpRequest) {
+					alert('Giving up :( Cannot create an XMLHTTP instance');
+					return false;
+				}
+				httpRequest.onreadystatechange = responseHandler;
+				httpRequest.open('POST', url);
+				httpRequest.setRequestHeader('Content-Type', 'application/json');
+				httpRequest.send(data);
+			}
+			
+			function sendImageToProfile() {
+				event.preventDefault();
+			
+				httpRequest = new XMLHttpRequest();
+				const url = "{{ url_for('upload_profile') }}";
+				
+				data = JSON.stringify({
+					image: document.getElementById("displayImage").getAttribute("src") || "fnord"
+				});
+
+				if (!httpRequest) {
+					alert('Giving up :( Cannot create an XMLHTTP instance');
+					return false;
+				}
+				httpRequest.open('POST', url);
+				httpRequest.setRequestHeader('Content-Type', 'application/json');
+				httpRequest.send(data);
+			}
+			
+			
+			function sendImageToAlbum() {
+				event.preventDefault();
+			
+				httpRequest = new XMLHttpRequest();
+				httpRequest.responseType = 'json';
+				const url = "{{ url_for('upload_album') }}";
+				
+				data = JSON.stringify({
+					image: document.getElementById("urlhidden").getAttribute("value") || "fnord",
+					album: document.getElementById("album-select").selectedOptions[0].getAttribute("value") || "g"
+				});
+
+				if (!httpRequest) {
+					alert('Giving up :( Cannot create an XMLHTTP instance');
+					return false;
+				}
+				httpRequest.onreadystatechange = responseHandler;
+				httpRequest.open('POST', url);
+				httpRequest.setRequestHeader('Content-Type', 'application/json');
+				httpRequest.send(data);
+			}
+
+			function responseHandler() {
+				if (httpRequest.readyState === XMLHttpRequest.DONE) {
+					if (httpRequest.status === 200) {
+						var image = httpRequest.response.image;
+						document.getElementById('displayImage').setAttribute('src', image);
+						alert('Request successful');
+					} 
+					else {
+						alert('There was a problem with the request.');
+					}
+				}
+			}
+		
+		});
+		</script>
+	</head>
+	<body>
+		<div class="main">
+			<h1>Filter Star</h1><br/>
+			<hr>
+		<!-- <input id="fileSelect" type="file" required /> -->
+		<form action="/upload" id="filter-submit" method="post" enctype="multipart/form-data">
+			<div id="image_preview">
+				<img id="displayImage" src="{{ filename }}">
+			</div>
+			<hr id="line">
+				<div id="selectImage">
+					<label>Select Your Image</label><br/>
+					<input id="fileSelect" type="file" required />
+					<input id="urlhidden" type="hidden" value="">
+					<select id="filter-select" name="filter" required>
+						<option value="">--Please choose an option--</option>
+						<option value="g">Grayscale</option>
+						<option value="s">Sepia</option>
+						<option value="b">Blur</option>
+						<option value="c">Contour</option>
+						<option value="d">Colorful</option>
+					</select>
+					<input type="submit" value="Upload your image" class="btn btn-primary" />
+					{% if current_user.is_authenticated %}
+					<input id="profile-submit" type="submit" value="Post image to profile" class="btn btn-primary" />
+					<hr>
+					<select id="album-select" name="album">
+						<option value="">--Please choose an option--</option>
+						{% for album in current_user.albums.all()%}
+							<option value="{{ album.id }}">{{album.name}}</option>
+						{% endfor %}
+					<input id="album-submit" type="submit" value="Post image to album" class="btn btn-primary" />
+					</select>
+					{% endif %}
+				</div>
+				</div>
+		</form>
+			</div>
+	<h4 id='loading' >loading..</h4>
+	<div id="message"></div>
+	</body>
+</html>
+
+{% endblock %}

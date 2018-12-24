@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Create Album<h1>
+	<form action="{{ url_for('album_create') }}" id="album-submit" method="post">
+		<input type="text" name="title" minlength="8" maxlength="100" required>
+		{% if images %}
+			<div class="image-container">
+			{% for image in images %}
+			<div>
+				<input type="checkbox" name="images" value="{{ image.id }}">
+				<img src="{{ image.thumbnail }}"</b>
+			</div>
+			{% endfor %}
+			</div>
+		{% else %}
+			<p>No images available</p>
+		{% endif %}
+        <input type="submit">
+	</form>
+{% endblock %}

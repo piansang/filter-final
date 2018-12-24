@@ -1,0 +1,9 @@
+Retrospective
+
+We’ve been able to successfully create the app. We’ve come to the conclusion that we need to improve the way we communicate better.
+
+We’re creating a group chat to make sure we have another way to reach group members if they become unresponsive.
+
+We’re going set deadlines on Trello to make sure we hold each other accountable.
+
+We’re established a single person, to manage our boards on Trello so that we can break up roles better.

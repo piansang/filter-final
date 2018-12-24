@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>User: {{ user.username }}</h1>
+    <hr>
+	{%if switch %}
+		<p><a href="{{ url_for('user_albums', username=current_user.username) }}">See albums</a></p>
+		{% if images %}
+			<div class="image-container">
+				{% for image in images %}
+					<div>
+						<img src="{{ image.thumbnail }}">
+					</div>
+				{% endfor %}
+				<div>
+					<a href="{{ url_for('filter') }}">
+						<label> 
+							<img src="{{ url_for('static', filename='plus_sign.jpg') }}"><br>
+							Filter New Image
+						</label>
+					</a>
+				</div>
+			</div>
+			{% else %}
+				<p>This user hasn't filtered any images with us.</p>
+			{% endif %}
+			{% if prev_url %}
+				<a href="{{ prev_url }}">Newer posts</a>
+			{% endif %}
+			{% if next_url %}
+				<a href="{{ next_url }}">Older posts</a>
+			{% endif %}
+		<hr>
+	{% else %}
+		<p><a href="{{ url_for('user', username=current_user.username) }}">See images</a></p>
+		{% if albums %}
+			<div class="image-container">
+				{% for album in albums %}
+				<div>
+					<a href="{{ url_for('album_view', id=album.id) }}">
+						<label> 
+							<img src="{{ url_for('static', filename='album.png') }}"><br>
+							{{ album.name }}
+						</label>
+					</a>
+				</div>
+				{% endfor %}
+				<div>
+					<a href="{{ url_for('album_create') }}">
+						<label> 
+							<img src="{{ url_for('static', filename='plus_sign.jpg') }}"><br>
+							Create New Album
+						</label>
+					</a>
+				</div>
+			</div>
+			{% if prev_url %}
+				<a href="{{ prev_url }}">Newer posts</a>
+			{% endif %}
+			{% if next_url %}
+				<a href="{{ next_url }}">Older posts</a>
+			{% endif %}
+		{% else %}
+			<p>This user hasn't made any albums with us.</p>
+		{% endif %}
+	{% endif %}
+{% endblock %}
